@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -113,19 +113,32 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, *args):
+    def do_create(self, args):
         """ Create an object of any class"""
-        args = args[0].split(" ")
-        print(args)
-        if not args[0]:
+        args = args.split(" ")
+        if not args:
             print("** class name missing **")
             return
         elif args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args[0
-        print(new_instance.__dict__)
-        print(new_instance.to_dict())
+
+        dic = {}
+        for arg in args[1:]:
+            arg = arg.split('=')
+            if len(arg) != 2:
+                continue
+            if arg[1][0] == '"' and arg[1][-1] == '"':
+                value = arg[1][1:-1].replace('_', ' ').replace('\\"', '"')
+            else:
+                if '.' in arg[1]:
+                    value = float(arg[1])
+                else:
+                    value = int(arg[1])
+            dic[arg[0]] = value
+
+        new_instance = HBNBCommand.classes[args[0]]()
+        new_instance.__dict__.update(dic)
         storage.save()
         print(new_instance.id)
         storage.save()
@@ -323,6 +336,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
