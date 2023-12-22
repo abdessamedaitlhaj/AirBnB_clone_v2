@@ -20,21 +20,12 @@ class BaseModel:
         """Instatntiates a new model"""
         if len(kwargs) > 0:
             if 'id' not in kwargs.keys():
-                self.__setattr__('id', str(uuid.uuid4()))
-            if 'created_at' or 'updated_at' not in kwargs.keys():
+                self.id = str(uuid.uuid4())
+            if 'created_at' not in kwargs.keys():
                 self.created_at = self.updated_at = datetime.now()
-            for k, v in kwargs.items():
-                if k == 'created_at' or k == 'updated_at':
-                    self.__setattr__(k, datetime.fromisoformat(v))
-                elif k != '__class__':
-                    self.__setattr__(k, v)
-
-
         else:
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
-        from models import storage
-        storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -45,16 +36,18 @@ class BaseModel:
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
         """Convert instance into dict format"""
         dictionary = {}
         dictionary.update(self.__dict__)
-        dictionary.update({'__class__': self.__class__.__name__})
+        dictionary.update({'__class__':
+                          (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
-        # del dictionary['_sa_instance_state']
+        del dictionary['_sa_instance_state']
         return dictionary
     
     def delete(self):
