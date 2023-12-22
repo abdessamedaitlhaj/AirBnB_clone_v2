@@ -138,9 +138,9 @@ class HBNBCommand(cmd.Cmd):
                     value = int(arg[1])
             dic[arg[0]] = value
 
-        new_instance = HBNBCommand.classes[args[0]]()
-        new_instance.__dict__.update(dic)
         print(dic)
+        new_instance = HBNBCommand.classes[args[0]](**dic)
+        #new_instance.__dict__.update(dic)
         storage.save()
         print(new_instance.id)
 
