@@ -29,7 +29,6 @@ class BaseModel:
                 self.created_at = datetime.now()
                 self.updated_at = datetime.now()
             self.__dict__.update(kwargs)
-            del kwargs['__class__']
 
     def __str__(self):
         """Returns a string representation of the instance"""
