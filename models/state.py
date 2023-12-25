@@ -18,12 +18,14 @@ class State(BaseModel, Base):
         cities = relationship('City', back_ref='state',
                               cascade='all, delete-orphan')
 
-    @property
-    def cities(self):
-        """Returns list of City instances"""
-        from models import storage
-        cities = []
-        for key, value in storage.all(City).items():
-            if key.split('.')[1] == self.id:
-                cities.append(value)
-        return (cities)
+    else:
+
+        @property
+        def cities(self):
+            """Returns list of City instances"""
+            from models import storage
+            cities = []
+            for key, value in storage.all(City).items():
+                if key.split('.')[1] == self.id:
+                    cities.append(value)
+            return (cities)
