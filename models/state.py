@@ -6,12 +6,17 @@ from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from os import getenv
 from models.city import City
+from os import getenv
 
 
 class State(BaseModel, Base):
-    """ State class """
+    """State class"""
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
+
+    if getenv("HBNB_TYPE_STORAGE") == "db":
+        cities = relationship('City', back_ref='state',
+                              cascade='all, delete-orphan')
 
     @property
     def cities(self):
