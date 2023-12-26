@@ -37,13 +37,12 @@ class DBStorage:
         objects = {}
         if not cls:
             for cs in classes:
-                instances = self.__session.query(cs).all()
-                for instance in instances:
-                    objects.update({instance.__class__.__name__ + instance.id: instance})
+                for ins in instances:
+                    objects.update({ins.__class__.__name__ + ins.id: ins})
         else:
             instances = self.__session.query(cls).all()
-            for elem in instances:
-                objects.update({elem.__class__.__name__ + elem.id: elem})
+            for ins in instances:
+                objects.update({ins.__class__.__name__ + ins.id: ins})
         return (objects)
 
     def new(self, obj):
