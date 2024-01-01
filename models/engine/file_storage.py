@@ -8,6 +8,10 @@ class FileStorage:
     __file_path = 'file.json'
     __objects = {}
 
+    def new(self, obj):
+        """Adds new object to storage dictionary"""
+        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
+
     def all(self, cls=None):
         """Returns a dictionary of the cls"""
         dic = {}
@@ -17,10 +21,6 @@ class FileStorage:
             if key.split(".")[0] == cls.__name__:
                 dic[key] = value
         return dic
-
-    def new(self, obj):
-        """Adds new object to storage dictionary"""
-        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
         """Saves storage dictionary to file"""
