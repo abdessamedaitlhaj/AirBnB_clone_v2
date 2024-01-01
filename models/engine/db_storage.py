@@ -28,3 +28,8 @@ class DBStorage:
 
     reload(self):
     """ """
+
+def close(self):
+        """ calls remove()
+        """
+        self.__session.close()    
