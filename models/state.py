@@ -8,6 +8,7 @@ import models
 from models.city import City
 import shlex
 
+
 class State(BaseModel, Base):
     """This is the class for State
     Attributes:
