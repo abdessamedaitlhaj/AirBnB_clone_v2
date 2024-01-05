@@ -12,15 +12,15 @@ place_amenity = Table(
             Base.metadata,
             Column("place_id",
         String(60),
-        ForeingKey("place_id"),
+        ForeignKey("place_id"),
         primary_key=True,
-        nullable=Flase
+        nullable=False
                 ),
             Column("amenity_id",
         String(60),
-        ForeingKey("amenity_id"),
+        ForeignKey("amenity_id"),
         primary_key=True,
-        nullable=Flase
+        nullable=False
                 )
         )
 
