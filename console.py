@@ -121,10 +121,10 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        if args[0] not in self.allowed_classes:
+        if args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = self.allowed_classes[args[0]]()
+        new_instance = HBNBCommand.classes[args[0]]()
         for attribute_arg in args[1:]:
             key_value = attribute_arg.split("=", 1)
             if len(key_value) != 2:
