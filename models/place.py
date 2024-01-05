@@ -21,7 +21,7 @@ place_amenity = Table(
         ForeignKey("amenity_id"),
         primary_key=True,
         nullable=False
-                )
+                ),
         )
 
 class Place(BaseModel, Base):
@@ -57,6 +57,7 @@ class Place(BaseModel, Base):
                     reviews_instances.append(value)
             return reviews_instances
 
+        @property
         def amenities(self):
             """eturns the list of Amenity instances based on
             the attribute amenity_ids"""
@@ -67,6 +68,7 @@ class Place(BaseModel, Base):
             for key, value in amenities.items():
                 if value.id in self.amenitt_ids:
                     amenities_instances.append(value)
+            return amenities_instances
 
         @amenities.setter
         def amenities(self, obj):
