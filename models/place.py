@@ -6,6 +6,24 @@ from sqlalchemy import Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from os import getenv
 
+
+place_amenity = Table(
+            "place_amenity",
+            Base.metadata,
+            Column("place_id",
+        String(60),
+        ForeingKey("place_id"),
+        primary_key=True,
+        nullable=Flase
+                ),
+            Column("amenity_id",
+        String(60),
+        ForeingKey("amenity_id"),
+        primary_key=True,
+        nullable=Flase
+                )
+        )
+
 class Place(BaseModel, Base):
     """A place to stay"""
 
@@ -25,6 +43,7 @@ class Place(BaseModel, Base):
 
     if getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", backref="place", cascade="all, delete")
+        amenities = relationship("Amenity", backref="place", cascade="all, delete")
     else:
         @property
         def reviews(self):
@@ -37,3 +56,21 @@ class Place(BaseModel, Base):
                 if value.place_id == self.id:
                     reviews_instances.append(value)
             return reviews_instances
+
+        def amenities(self):
+            """eturns the list of Amenity instances based on
+            the attribute amenity_ids"""
+            from models import storage
+
+            amenities = storgae.all(Amenity)
+            amenities_instances = []
+            for key, value in amenities.items():
+                if value.id in self.amenitt_ids:
+                    amenities_instances.append(value)
+
+        @amenities.setter
+        def amenities(self, obj):
+            """handles append method for adding an Amenity.id
+            to the attribute amenity_ids"""
+            if isinstance(obj, Amenity):
+                self.amenity_ids.append(obj.id)
