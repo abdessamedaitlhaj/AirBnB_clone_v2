@@ -12,13 +12,13 @@ place_amenity = Table(
             Base.metadata,
             Column("place_id",
         String(60),
-        ForeignKey("place_id"),
+        ForeignKey("places.id"),
         primary_key=True,
         nullable=False
                 ),
             Column("amenity_id",
         String(60),
-        ForeignKey("amenity_id"),
+        ForeignKey("amenities.id"),
         primary_key=True,
         nullable=False
                 ),
@@ -61,14 +61,7 @@ class Place(BaseModel, Base):
         def amenities(self):
             """eturns the list of Amenity instances based on
             the attribute amenity_ids"""
-            from models import storage
-
-            amenities = storgae.all(Amenity)
-            amenities_instances = []
-            for key, value in amenities.items():
-                if value.id in self.amenitt_ids:
-                    amenities_instances.append(value)
-            return amenities_instances
+            return self.amenity_ids
 
         @amenities.setter
         def amenities(self, obj):
