@@ -4,29 +4,25 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer
 from sqlalchemy import Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
-from models.review import Review
 from os import getenv
-from models.amenity import Amenity
+
 
 place_amenity = Table(
-    "place_amenity",
-    Base.metadata,
-    Column(
-        "place_id",
+            "place_amenity",
+            Base.metadata,
+            Column("place_id",
         String(60),
         ForeignKey("places.id"),
         primary_key=True,
-        nullable=False,
-    ),
-    Column(
-        "amenity_id",
+        nullable=False
+                ),
+            Column("amenity_id",
         String(60),
         ForeignKey("amenities.id"),
         primary_key=True,
-        nullable=False,
-    ),
-)
-
+        nullable=False
+                ),
+        )
 
 class Place(BaseModel, Base):
     """A place to stay"""
@@ -47,35 +43,31 @@ class Place(BaseModel, Base):
 
     if getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship("Review", backref="place",
-                               cascade="all, delete")
-        amenities = relationship(
-            "Amenity", secondary=place_amenity,
-            back_populates="places", viewonly=False
-        )
-
+                cascade="all, delete")
+        amenities = relationship("Amenity", backref="place",
+                cascade="all, delete")
     else:
-
         @property
         def reviews(self):
-            """Returns the list of Review instances with place_id
-            equals to the current Place.id"""
+            """Returns the list of Review instances with
+            place_id equals to the current Place.id"""
             from models import storage
-
-            all_reviews = storage.all(Review)
-            related_reviews = []
-            for review in all_reviews.values():
-                if review.place_id == self.id:
-                    related_reviews.append(review)
-            return related_reviews
+            reviews = storage.all(Review)
+            reviews_instances = []
+            for key, value in reviews.items():
+                if value.place_id == self.id:
+                    reviews_instances.append(value)
+            return reviews_instances
 
         @property
         def amenities(self):
-            """Returns the list of Amenity instances based on amenity_ids."""
+            """eturns the list of Amenity instances based on
+            the attribute amenity_ids"""
             return self.amenity_ids
 
         @amenities.setter
         def amenities(self, obj):
-            """Handles append method for adding an Amenity.id
-            to amenity_ids."""
+            """handles append method for adding an Amenity.id
+            to the attribute amenity_ids"""
             if isinstance(obj, Amenity):
                 self.amenity_ids.append(obj.id)
